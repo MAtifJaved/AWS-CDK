@@ -1,4 +1,8 @@
 import * as cdk from '@aws-cdk/core';
+import * as lambda from '@aws-cdk/aws-lambda';
+import * as apigw from '@aws-cdk/aws-apigateway';
+// import { handler } from '../lambda/hello';
+
 // import * as sqs from '@aws-cdk/aws-sqs';
 
 export class AwsLambdaStack extends cdk.Stack {
@@ -11,5 +15,15 @@ export class AwsLambdaStack extends cdk.Stack {
     // const queue = new sqs.Queue(this, 'AwsLambdaQueue', {
     //   visibilityTimeout: cdk.Duration.seconds(300)
     // });
+
+    const hello = new lambda.Function(this,"HelloHandler",{
+      runtime:lambda.Runtime.NODEJS_14_X ,
+      code:lambda.Code.fromAsset("lambda"),
+      handler:"hello.handler"
+    });
+
+    new apigw.LambdaRestApi(this, "Endpoint", {
+      handler: hello,
+    });
   }
 }
